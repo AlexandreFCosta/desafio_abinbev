@@ -1,67 +1,67 @@
 # BEES Data Engineering – Breweries Case
 
-## Objetivo
+## Objective
 
-O objetivo deste projeto é demonstrar habilidades em consumir dados de uma API, transformá-los e persistir em um data lake seguindo a arquitetura medallion, com três camadas: dados brutos, dados curados particionados por localização e uma camada analítica agregada.
+The objective of this project is to demonstrate skills in consuming data from an API, transforming it, and persisting it in a data lake following the medallion architecture, with three layers: raw data, curated data partitioned by location, and an aggregated analytical layer.
 
-## Arquitetura e Ferramentas Utilizadas
+## Architecture and Tools Used
 
-- **API**: Open Brewery DB para a listagem de cervejarias. Endpoint utilizado:
+- **API**: Open Brewery DB for brewery listings. Endpoint used:
   ```
   https://api.openbrewerydb.org/breweries
   ```
 
-- **Ferramenta de Orquestração**: Escolhi o **Airflow** para construir o pipeline de dados, devido à sua capacidade de lidar com agendamentos, tentativas de repetição, e tratamento de erros de forma eficiente.
+- **Orchestration Tool**: I chose **Airflow** to build the data pipeline due to its ability to handle scheduling, retries, and error handling efficiently.
 
-- **Linguagem**: Utilizei **Python** para requisições e transformação dos dados, integrando o uso do **PySpark** para processamento de dados em grande escala.
+- **Language**: I used **Python** for data requests and transformation, integrating **PySpark** for large-scale data processing.
 
-- **Containerização**: O projeto foi modularizado utilizando **Docker**, facilitando o ambiente de desenvolvimento e execução dos pipelines em containers isolados.
+- **Containerization**: The project was modularized using **Docker**, facilitating the development environment and running pipelines in isolated containers.
 
-- **Camadas do Data Lake**:
-  - **Bronze (Raw Data)**: Dados da API são armazenados no formato JSON sem transformações.
-  - **Silver (Curated Data)**: Dados transformados e particionados por localização, armazenados no formato Parquet.
-  - **Gold (Analytical Layer)**: Uma visão agregada contendo a quantidade de cervejarias por tipo e localização.
+- **Data Lake Layers**:
+  - **Bronze (Raw Data)**: API data is stored in JSON format without transformations.
+  - **Silver (Curated Data)**: Data is transformed and partitioned by location, stored in Parquet format.
+  - **Gold (Analytical Layer)**: An aggregated view containing the number of breweries by type and location.
 
-## Execução
+## Execution
 
-### Pré-requisitos
+### Prerequisites
 
-1. **Docker**: Certifique-se de ter o Docker instalado. Caso contrário, você pode instalar seguindo as instruções [aqui](https://docs.docker.com/get-docker/).
-2. **Docker Compose**: Instalado junto com o Docker Desktop.
+1. **Docker**: Make sure Docker is installed. If not, you can install it following the instructions [here](https://docs.docker.com/get-docker/).
+2. **Docker Compose**: Installed along with Docker Desktop.
 
-### Como rodar o projeto
+### How to Run the Project
 
-1. Clone este repositório:
+1. Clone this repository:
    ```bash
    git clone https://github.com/AlexandreFCosta/desafio_abinbev.git
    cd desafio_abinbev
    ```
 
-2. Crie o arquivo `.env` para definir as variáveis de ambiente necessárias, como as credenciais do Gmail para o envio de alertas.
+2. Create the `.env` file to define the required environment variables, such as Gmail credentials for sending alerts.
 
-3. Inicie o ambiente Docker:
+3. Start the Docker environment:
    ```bash
    docker-compose up
    ```
 
-4. Acesse a interface do Airflow:
-   - Abra seu navegador e vá até `http://localhost:8080`
-   - Use as credenciais padrão `airflow` para login.
+4. Access the Airflow interface:
+   - Open your browser and go to `http://localhost:8080`
+   - Use the default credentials `airflow` to log in.
 
-5. Execute o pipeline diretamente pela interface do Airflow.
+5. Run the pipeline directly from the Airflow interface.
 
-### Monitoramento e Alertas
+### Monitoring and Alerts
 
-- **Monitoramento**: Utilizei o Airflow para monitoramento dos DAGs, configurando retries automáticos para lidar com possíveis falhas no pipeline.
-- **Alertas**: Para notificações de falhas ou erros críticos no pipeline, configurei alertas via **Gmail**, que enviam um e-mail caso ocorra uma falha.
+- **Monitoring**: I used Airflow for monitoring the DAGs, configuring automatic retries to handle potential pipeline failures.
+- **Alerts**: For notifications of failures or critical errors in the pipeline, I set up alerts via **Gmail**, which sends an email in case of failure.
 
-### Testes
+### Testing
 
-Testes foram incluídos para validar:
-- Consumo da API
-- Transformação e particionamento dos dados
-- Agregações para a camada Gold
+Tests were included to validate:
+- API consumption
+- Data transformation and partitioning
+- Aggregations for the Gold layer
 
-## Considerações Finais
+## Final Considerations
 
-O pipeline foi projetado com foco na modularidade e escalabilidade. Além disso, medidas de resiliência foram tomadas, como retries automáticos e alertas configurados via Gmail. 
+The pipeline was designed with a focus on modularity and scalability. Additionally, resilience measures were implemented, such as automatic retries and Gmail-configured alerts.
