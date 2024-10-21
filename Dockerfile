@@ -3,17 +3,11 @@ FROM apache/airflow:2.7.1-python3.11
 USER root
 
 # Criação de diretórios e ajuste de permissões
-RUN mkdir -p /opt/airflow/silver_layer && \
-    chown -R root:root /opt/airflow && \
-    chmod -R 777 /opt/airflow
+RUN mkdir -p /opt/airflow/silver_layer
 
-RUN mkdir -p /opt/airflow/gold_layer && \
-    chown -R root:root /opt/airflow && \
-    chmod -R 777 /opt/airflow
+RUN mkdir -p /opt/airflow/gold_layer
 
-RUN mkdir -p /opt/airflow/bronze_layer && \
-    chown -R root:root /opt/airflow && \
-    chmod -R 777 /opt/airflow
+RUN mkdir -p /opt/airflow/bronze_layer
 
 # Install necessary packages, including curl
 RUN apt-get update && \
@@ -21,7 +15,7 @@ RUN apt-get update && \
     apt-get clean
 
 # Set JAVA_HOME environment variable
-ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64
 
 # Instalar Spark
 RUN curl -L https://archive.apache.org/dist/spark/spark-3.5.3/spark-3.5.3-bin-hadoop3.tgz -o spark.tgz \
