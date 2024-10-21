@@ -9,8 +9,6 @@ x-airflow-common: &airflow-common
   build:
     context: .
     dockerfile: Dockerfile
-  env_file:
-    - airflow.env
   environment:
     # É possível configurar alertas de monitoramento quando se tem uma conta 
     # profissional, configurando o recurso Senhas de Aplicativo 
@@ -66,7 +64,7 @@ services:
 
   webserver:
     <<: *airflow-common
-    command: [ "airflow", "webserver" ]
+    command: bash -c " airflow db init && airflow webserver"
     ports:
       - "8080:8080"
     depends_on:
