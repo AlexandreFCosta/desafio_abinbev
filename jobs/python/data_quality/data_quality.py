@@ -82,7 +82,7 @@ def run_data_quality_checks(**kwargs):
         df = spark.read.json(bronze_path)
 
         check_nulls(df, ["name", "city", "state"])
-        check_duplicates(df, ["country"])
+        check_duplicates(df, ["id"])
     
     except Exception as e:
         print(f"Data Quality Check Failed: {e}")

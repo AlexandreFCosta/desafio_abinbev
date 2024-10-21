@@ -12,12 +12,14 @@ x-airflow-common: &airflow-common
   env_file:
     - airflow.env
   environment:
+    # É possível configurar alertas de monitoramento quando se tem uma conta 
+    # profissional, configurando o recurso Senhas de Aplicativo 
     AIRFLOW__EMAIL__EMAIL_BACKEND: airflow.utils.email.send_email_smtp
     AIRFLOW__SMTP__SMTP_HOST: smtp-mail.outlook.com
     AIRFLOW__SMTP__SMTP_STARTTLS: True
-    AIRFLOW__SMTP__SMTP_USER: <seu email de origem>
-    AIRFLOW__SMTP__SMTP_PASSWORD: <senha de acesso>
-    AIRFLOW__SMTP__SMTP_MAIL_FROM: <seu email de origem>
+    AIRFLOW__SMTP__SMTP_USER: alexandrefcosta.dev@outlook.com
+    AIRFLOW__SMTP__SMTP_PASSWORD: senha do aplicativo # criada com um email profissional
+    AIRFLOW__SMTP__SMTP_MAIL_FROM: alexandrefcosta.dev@outlook.com
     AIRFLOW__SMTP__SMTP_PORT: 587
   volumes:
     - ./jobs:/opt/airflow/jobs
@@ -26,7 +28,6 @@ x-airflow-common: &airflow-common
     - ./bronze_layer:/opt/airflow/bronze_layer
     - ./silver_layer:/opt/airflow/silver_layer
     - ./gold_layer:/opt/airflow/gold_layer
-    - ./data_quality:/opt/airflow/data_quality
   depends_on:
     - postgres
 
@@ -65,14 +66,12 @@ services:
 
   webserver:
     <<: *airflow-common
-    command: [ "bash", "/opt/airflow/setup_env.sh", "airflow", "webserver" ]
+    command: [ "airflow", "webserver" ]
     ports:
       - "8080:8080"
     depends_on:
       - scheduler
-    volumes:
-      - ./secrets.json:/opt/airflow/secrets.json
 
   scheduler:
     <<: *airflow-common
-    command: bash -c " airflow db migrate && airflow users create --username alexa --firstname Alexandre --lastname Costa --role Admin --email alexandrefcosta.dev@gmail.com --password 1234 && airflow scheduler"
+    command: bash -c " airflow db migrate && airflow users create --username alexa --firstname Alexandre --lastname Costa --role Admin --email alexandrefcosta.dev@outlook.com --password 1234 && airflow scheduler"

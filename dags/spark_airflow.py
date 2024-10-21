@@ -16,7 +16,7 @@ dag = DAG(
     default_args={
         "depends_on_past":False,
         "start_date": airflow.utils.dates.days_ago(1),
-        "email": ["<email do owner>"],
+        "email": ["alexandrefcosta.dev@outlook.com"],
         "email_on_failure":True,
         "email_on_retry":True,
         "retries":1,
@@ -81,5 +81,5 @@ end = PythonOperator(
 )
 
 
-start >> unity_tests_run >> extract_data >> data_quality >> send_email >> end
+start >> unity_tests_run >> extract_data >> data_quality >> send_email
 data_quality >> transform_data >> load_data >> end
