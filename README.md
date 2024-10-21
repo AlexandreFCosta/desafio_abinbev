@@ -1,7 +1,3 @@
-Aqui está um exemplo de README para o seu projeto:
-
----
-
 # BEES Data Engineering – Breweries Case
 
 ## Objetivo
@@ -69,7 +65,3 @@ Testes foram incluídos para validar:
 ## Considerações Finais
 
 O pipeline foi projetado com foco na modularidade e escalabilidade. Além disso, medidas de resiliência foram tomadas, como retries automáticos e alertas configurados via Gmail. 
-
----
-
-Esse README proporciona uma visão clara de como o projeto está estruturado, como executá-lo e como ele lida com monitoramento e alertas. Se precisar de mais alguma modificação, estou à disposição!
