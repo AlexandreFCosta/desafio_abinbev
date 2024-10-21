@@ -1,62 +1,75 @@
-# Apache Airflow on Steroids with Java, Scala and Python Spark Jobs
+Aqui está um exemplo de README para o seu projeto:
 
-This project orchestrates Spark jobs written in different programming languages using Apache Airflow, all within a Dockerized environment. The DAG `sparking_flow` is designed to submit Spark jobs written in Python, Scala, and Java, ensuring that data processing is handled efficiently and reliably on a daily schedule.
+---
 
-## Project Structure
+# BEES Data Engineering – Breweries Case
 
-The DAG `sparking_flow` includes the following tasks:
+## Objetivo
 
-- `start`: A PythonOperator that prints "Jobs started".
-- `python_job`: A SparkSubmitOperator that submits a Python Spark job.
-- `scala_job`: A SparkSubmitOperator that submits a Scala Spark job.
-- `java_job`: A SparkSubmitOperator that submits a Java Spark job.
-- `end`: A PythonOperator that prints "Jobs completed successfully".
+O objetivo deste projeto é demonstrar habilidades em consumir dados de uma API, transformá-los e persistir em um data lake seguindo a arquitetura medallion, com três camadas: dados brutos, dados curados particionados por localização e uma camada analítica agregada.
 
-These tasks are executed in a sequence where the `start` task triggers the Spark jobs in parallel, and upon their completion, the `end` task is executed.
+## Arquitetura e Ferramentas Utilizadas
 
-## Prerequisites
+- **API**: Open Brewery DB para a listagem de cervejarias. Endpoint utilizado:
+  ```
+  https://api.openbrewerydb.org/breweries
+  ```
 
-Before setting up the project, ensure you have the following:
+- **Ferramenta de Orquestração**: Escolhi o **Airflow** para construir o pipeline de dados, devido à sua capacidade de lidar com agendamentos, tentativas de repetição, e tratamento de erros de forma eficiente.
 
-- Docker and Docker Compose installed on your system.
-- Apache Airflow Docker image or a custom image with Airflow installed.
-- Apache Spark Docker image or a custom image with Spark installed and configured to work with Airflow.
-- Docker volumes for Airflow DAGs, logs, and Spark jobs are properly set up.
+- **Linguagem**: Utilizei **Python** para requisições e transformação dos dados, integrando o uso do **PySpark** para processamento de dados em grande escala.
 
-## Docker Setup
+- **Containerização**: O projeto foi modularizado utilizando **Docker**, facilitando o ambiente de desenvolvimento e execução dos pipelines em containers isolados.
 
-To run this project using Docker, follow these steps:
+- **Camadas do Data Lake**:
+  - **Bronze (Raw Data)**: Dados da API são armazenados no formato JSON sem transformações.
+  - **Silver (Curated Data)**: Dados transformados e particionados por localização, armazenados no formato Parquet.
+  - **Gold (Analytical Layer)**: Uma visão agregada contendo a quantidade de cervejarias por tipo e localização.
 
-1. Clone this repository to your local machine.
-2. Navigate to the directory containing the `docker-compose.yml` file.
-3. Build and run the containers using Docker Compose:
+## Execução
 
-```bash
-docker-compose up -d --build
-```
-This command will start the necessary services defined in your docker-compose.yml, such as Airflow webserver, scheduler, Spark master, and worker containers.
+### Pré-requisitos
 
-## Directory Structure for Jobs
-Ensure your Spark job files are placed in the following directories and are accessible to the Airflow container:
+1. **Docker**: Certifique-se de ter o Docker instalado. Caso contrário, você pode instalar seguindo as instruções [aqui](https://docs.docker.com/get-docker/).
+2. **Docker Compose**: Instalado junto com o Docker Desktop.
 
-* Python job: jobs/python/wordcountjob.py
-* Scala job: jobs/scala/target/scala-2.12/word-count_2.12-0.1.jar
-* Java job: jobs/java/spark-job/target/spark-job-1.0-SNAPSHOT.jar
+### Como rodar o projeto
 
-These paths should be relative to the mounted Docker volume for Airflow DAGs.
+1. Clone este repositório:
+   ```bash
+   git clone https://github.com/AlexandreFCosta/desafio_abinbev.git
+   cd desafio_abinbev
+   ```
 
-## Usage
-After the Docker environment is set up, the `sparking_flow` DAG will be available in the Airflow web UI [localhost:8080](localhost:8080), where it can be triggered manually or run on its daily schedule.
+2. Crie o arquivo `.env` para definir as variáveis de ambiente necessárias, como as credenciais do Gmail para o envio de alertas.
 
-### The DAG will execute the following steps:
-* Print "Jobs started" in the Airflow logs.
-* Submit the Python Spark job to the Spark cluster.
-* Submit the Scala Spark job to the Spark cluster.
-* Submit the Java Spark job to the Spark cluster.
-* Print "Jobs completed successfully" in the Airflow logs after all jobs have finished.
+3. Inicie o ambiente Docker:
+   ```bash
+   docker-compose up
+   ```
 
-### Note:
-You must add the spark cluster url to the spark connection in the configuration on Airflow UI
+4. Acesse a interface do Airflow:
+   - Abra seu navegador e vá até `http://localhost:8080`
+   - Use as credenciais padrão `airflow` para login.
 
-### Full Course
-[![Sparking Flow](https://img.youtube.com/vi/o_pne3aLW2w/0.jpg)](https://www.youtube.com/watch?v=o_pne3aLW2w)
+5. Execute o pipeline diretamente pela interface do Airflow.
+
+### Monitoramento e Alertas
+
+- **Monitoramento**: Utilizei o Airflow para monitoramento dos DAGs, configurando retries automáticos para lidar com possíveis falhas no pipeline.
+- **Alertas**: Para notificações de falhas ou erros críticos no pipeline, configurei alertas via **Gmail**, que enviam um e-mail caso ocorra uma falha.
+
+### Testes
+
+Testes foram incluídos para validar:
+- Consumo da API
+- Transformação e particionamento dos dados
+- Agregações para a camada Gold
+
+## Considerações Finais
+
+O pipeline foi projetado com foco na modularidade e escalabilidade. Além disso, medidas de resiliência foram tomadas, como retries automáticos e alertas configurados via Gmail. 
+
+---
+
+Esse README proporciona uma visão clara de como o projeto está estruturado, como executá-lo e como ele lida com monitoramento e alertas. Se precisar de mais alguma modificação, estou à disposição!
