@@ -9,6 +9,8 @@ x-airflow-common: &airflow-common
   build:
     context: .
     dockerfile: Dockerfile
+  env_file:
+    - airflow.env
   environment:
     # É possível configurar alertas de monitoramento quando se tem uma conta 
     # profissional, configurando o recurso Senhas de Aplicativo 
